@@ -1,0 +1,133 @@
+%1)
+u = 3;
+v = 4;
+%1_a)
+u1 = log(u.^2 + v.^2);
+%1_b)
+b1 = v - 3;
+b2 = sqrt(b1);
+u2 = b2 / (u - 2.*v).^2;
+%1_c)
+c1 = 2.*u;
+c2 = sin(c1);
+c3 = abs(c2);
+c4 = exp(v);
+u3 = c3.* c4;
+%2)
+%2_a)
+save('vars.mat', 'u', 'v');
+%2_b)
+clear u v;
+load('vars.mat');
+%3)
+%3_a)
+a = complex(2, 3);
+b = complex(4, -4);
+z1 = a .* b;
+%3_b)
+c = complex(2, 9);
+z2 = exp(c);
+%3_c)
+z1phi = angle(z1);
+%3_d)
+z2mag = abs(z2);
+%4)
+%4_a)
+a = ones(1, 10);
+%4_b)
+c = zeros(10, 1);
+%4_c)
+b = rand(1, 10);
+%4_d)
+I = eye(4);
+%4_e)
+A = [16, 2, 3, 13; 5, 11, 10, 8; 9, 7, 6, 12; 4, 14, 15, 1;];
+%5)
+%5_a)
+pistep = 0 : pi / 16 : pi / 2;
+%5_b)
+xstep = linspace (0, 1, 10);
+%5_c)
+ax = A(3, 2);
+%5_d)
+ar = A(1,:);
+%5_e)
+Atwo = A(1:2, 2:3);
+%5_f)
+ay = A(9);
+%5_g)
+ac = A(9: 12);
+%6)
+%6_a)?
+B = [A zeros(4,1)];
+%6_b)
+C = [B; ones(1,5)];
+%6_c)
+Ct = C';
+%7)
+%7_a)
+x = [3, 2, 1];
+y = [2, 2, 1];
+M = [2, 5, 6; 4, 7, 7; 8, 5, 1;];
+%7_b)
+xc = x * 3;
+%7_c)
+xy = x + y;
+%7_d)
+yc = y + 3;
+%7_e)
+xycross = cross(x,y);
+%7_f)
+xydot = x*y';
+%7_g)
+Xyout = x'*y;
+%7_h)
+xm = M*x';
+%7_i)
+ym = y*M;
+%7_j)
+CX = M*Xyout;
+%8)
+%8_a)
+xcos = cos(x);
+z = y.*xcos;
+%8_b)
+xr = rand(10000, 1);
+yr = rand(10000, 1);
+%8_c)
+for r = 1:length(xr)
+	zr(r) = xr(r) * yr(r);
+end
+%8_d)
+zr = xr.*yr;
+%9)
+%9_a)
+D = rand(1000, 1000);
+%9_b)
+e = rand(1000, 1);
+%9_c)
+f = inv(D)*e;
+%9_d)
+f = D\e;
+%9_e)
+tic;
+f = inv(D)*e;
+t1 = toc;
+tic;
+f = D\e;
+t2 = toc;
+%10)
+%10_a)
+inda = find(A>6);
+%10_b)
+indb = find(A==7);
+%10_c)
+ind = find(A>=2 & A<=8);
+indc = ind(1:2, :);
+%11)
+%11_a)
+ela = A(inda);
+%11_b)
+elb = A(indb);
+%11_c)
+elc = A(indc);
