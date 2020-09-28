@@ -1,0 +1,50 @@
+%1
+n = 1;
+x = -30:0.25:30;
+y = ackley3(x);
+hFig1 = figure;
+plot(x, y);
+n  = 2;
+x1 = -30:0.25:30;
+x2 = -30:0.25:30;
+[x1, x2] = meshgrid(-30:0.25:30, -30:0.25:30);
+y = ackley3(x1, x2);
+surface(x1, x2, y);
+meshgrid(x1, x2, y);
+
+%2
+n = 2;
+k = 100;
+x1 = -30.0 + 60.0*rand(k, n);
+x = zeros(k, n);
+fval = zeros(1, k);
+options = optimset(‘Display’, ‘Off’, ‘Diagnostics’, ‘Off’, ‘FunValCheck’, ‘On’);
+for i = 1:k
+	[x(i,:), fval(i)] = fminunc(@ackley3, x0(i,:), options);
+end
+histogram(fval);
+xlabel(‘found minimum f(x)’)
+ylabel(‘number of runs’)
+disp([‘Minimum of the’ num2str(n) ‘-dim-Ackley3 we managed to find’, GlobalSearch ‘in ‘num2str(k)’ trials is: ‘ num2str(min(fval))]);]
+
+%3
+boxplot(x);
+
+%4
+opts = optimoptions(@ackley3, ‘Algorithm’, ‘sqp’);
+problem = createOptimProblem(‘fminunc’, ‘n’, {1, 2, 3, 4, 5, 6});
+ms = MultiStart;
+[x, f] = run(ms, problem, 500)
+
+%5
+opts = optimoptions(@fmincon, ‘Algorithm’, ‘interior-point’);
+problem = createOptimProblem(‘fminunc’, ‘n’, {1, 2, 3, 4, 5, 6});
+gs = GlobalSearch;
+[x, f] = run(gs, problem)
+
+%6 optional
+%1
+optimtool;
+%2
+%3
+options = gaoptimset(@ga);
