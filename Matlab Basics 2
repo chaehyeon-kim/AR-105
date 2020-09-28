@@ -1,0 +1,95 @@
+%1
+x = -1 : 0.1 : 5;
+y1 = 2*x.^2 - 8*x - 11;
+hFig1 = figure;
+subplot(2, 1, 1);
+plot(x, y1);
+title('Plot title 1');
+xlabel('x')
+ylabel('g(x)')
+axis([-1 5 -20 0])
+y2 = x.*exp(-2.*x);
+subplot(2, 1, 2);
+plot(x, y2);
+title('Plot title 2');
+xlabel('x')
+ylabel('f(x)')
+axis([-1 5 -10 5])
+%2 _ optional
+%3
+x = 0 : pi/100 : 2*pi;
+y1 = cos(2.*x) + sin(3.*x);
+y2 = -2.*sin(2.*x) + 3.*sin(3.*x);
+hFig3 = figure;
+plot(x, y1, 'r', x, y2, 'b');
+title('Plot title');
+xlabel('x')
+ylabel('s(x)&v(x)')
+legend('s', 'v')
+%4
+x = 0 : 0.05 : 2;
+y1 = x.*exp(-3.*x);
+y2 = (1-3.*x).*exp(-3.*x);
+hFig4 = figure;
+plot(x, y1, 'r', x, y2, 'k');
+title('Plot title');
+xlabel('x')
+ylabel('f(x)&g(x)')
+legend('f', 'g')
+%5 _ optional
+%6
+[x, y] = meshgrid(-2:0.2:2, -2:0.2:2);
+z = ( x.^2 + 2.*y.^2 ) * exp(1-x.^2-y.^2);
+hFig6 = figure;
+surface(x, y, z);
+meshgrid(x, y, z);
+axis([-2 2 -2 2 0 2])
+%7
+hFig7 = figure;
+fcontour(@(x,y) ( x.^2 + 2.*y.^2 ) * exp(1-x.^2-y.^2) ,[-2 2 -2 2]);
+%8
+[x, y] = meshgrid(-2:0.2:2, -2:0.2:2);
+u = x.^2 + 2.*y.^2;
+v = exp(1-x.^2-y.^2);
+hFig8 = figure;
+quiver(x, y, u, v);
+axis([-2 2 -2 2])
+%9
+hFig9 = figure;
+histogram(x);
+x = 0 + (100 - 0) * rand(10000, 1);
+%10 _ optional
+%13
+%13
+%13_a
+a = rand(10, 1);
+b = rand(10,1);
+%13_b
+hFig11 = figure; 
+%13_c
+plot(a, b);
+%13_d
+plot(a, b, 'Color', 'r');
+%13_e
+plot(a, b, 'Color', 'r','LineStyle', '--');
+%15  
+%mypoly = @(x) x./x.^3 - 5*x - 5;
+int = quad(@mypoly, 0.0, 5.0);
+
+function varfunc(varargin)
+    for i=1:nargin
+        display(varargin{i});
+    end
+end
+
+function f = ffun(x,y)
+        f = (x.^2 - 2*y.^2).*exp(1-x.^2-y.^2);
+end
+
+function g = gfun(x)
+    g = sin(x).*cos(x);
+end
+
+function f = mypoly(x)
+    f = x./x.^3 - 5*x - 5;
+end
