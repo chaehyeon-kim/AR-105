@@ -1,0 +1,233 @@
+%Constrained Optimization
+%1
+options=optimoptions('fmincon','Algorithm','sqp');
+A=[1,2];
+b=1;
+Aeq=[1, -0.5];
+beq=0.7;
+x0=[0.5,0];
+lb=[];
+ub=[];
+nonlcon=[];
+xminc=fmincon(@rosenbrock,x0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%2
+Fig2=figure;
+f=@(x1,x2) (1-x1).^2 + 100.*(x2-x1.^2).^2;
+fcontour(f,[-3 3 -3 3],'LevelList',exp(0:0.5:10)-1);
+
+options = optimoptions(options,'SpecifyObjectiveGradient', true);
+options = optimoptions(options,'OutputFcn', @optHistoryLogger);
+x0 = [-1,2];
+
+xopt3 = fmincon(@rosenbrock,x0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+optHistory3 = optHistoryLogger; % get recorded data struct
+dist3 = optHistory3.fval;
+xAlgo3 = optHistory3.x;
+funcountAlgo3 = optHistory3.functionCount;
+hold on;
+plot(optHistory3.x(:,1),optHistory3.x(:,2),'-o');
+
+%4
+x1=[-3 3];
+plot(x1,-0.5*x1 + 0.5, 'c');
+
+x1=[-1 2];
+plot(x1, 2*x1-1.4,'m');
+
+rosenbrock.m
+
+function [f,g]=rosenbrock(x)
+  
+ f=100*(x(2)-(x(1))^2)^2+(1-x(1))^2;
+  if nargout > 1
+     g=[2*x(1) - 400*x(1)*(- x(1)^2 + x(2)) - 2;
+            - 200*x(1)^2 + 200*x(2)];
+ end
+ end
+
+grad.m
+syms x1 x2;
+f=100.*(x2-x1.^2).^2+(1-x1).^2;
+gf=gradient(f);
+
+problem.m
+% Problem-Based
+%1 Setup problem definition
+prob=optimproblem('ObjectiveSense','minimize');
+x=optimvar('x',2,'Type','continuous');
+prob.Objective=(x(1)+2*x(2)-7)^2+(2*x(1)+x(2)-5)^2;
+%2 Review
+figure(1);
+prob.show;
+%3 Solve, solution vector
+x0.x = [0,0];
+sol=solve(prob, x0);
+%4
+[sol,fval,exitflag,output]=solve(prob);
+xmin=sol.x;
+%5 Solver form
+problem=prob2struct(prob);
+%6
+problem.solver;
+%7
+sol2=lsqlin(problem);
+%sol3=quadprog(problem);
+%problem.solver is lsqlin
+solver.m
+%Solver Based
+%rosenbrock
+%1
+xop=[1,1];
+rose=rosenbrock(xop);
+%2 
+[min,grad]=rosenbrock(xop);
+%3
+f=@(x1,x2) (1-x1).^2 + 100.*(x2-x1.^2).^2;
+figure(2);
+fcontour(f,[-3 3 -3 3],'LevelList',exp(0:0.5:10)-1);
+
+temp_quasi.m
+
+f=@(x1,x2) (1-x1).^2 + 100.*(x2-x1.^2).^2;
+fcontour(f,[-2 2 -1 3],'LevelList',exp(0:0.5:10)-1);
+hold on;
+
+%trust-region
+options = optimoptions('fminunc', 'Algorithm', 'trust-region');
+options = optimoptions(options,'SpecifyObjectiveGradient', true);
+options = optimoptions(options,'OutputFcn', @optHistoryLogger);
+x0 = [-1,2];
+
+xopt = fminunc(@rosenbrock,x0,options);
+optHistory = optHistoryLogger; % get recorded data struct
+dist = optHistory.fval;
+xAlgo1 = optHistory.x;
+funcountAlgo1 = optHistory.functionCount;
+plot(optHistory.x(:,1),optHistory.x(:,2),'-o');
+
+
+
+
+options2 = optimoptions('fminunc', 'Algorithm', 'quasi-newton');
+options2= optimoptions(options2,'SpecifyObjectiveGradient', true);
+options2 = optimoptions(options2,'OutputFcn', @optHistoryLogger);
+
+
+xopt2 = fminunc(@rosenbrock,x0,options2);
+optHistory2 = optHistoryLogger;
+dist2 = optHistory2.fval;
+Algo2 = optHistory2.x;
+
+funcountAlgo2 = optHistory2.functionCount;
+hold on;
+plot(optHistory2.x(:,1),optHistory2.x(:,2),'-x');
+
+%1)
+prob = optimproblem('ObjectiveSense','minimize');
+x = optimvar('x',2,'Type','continuous');
+prob.Objective = (x(1)+2*x(2)-7).^2 + (2*x(1)+x(2)-5).^2;
+%2)
+figure(1);
+prob.show
+%3)
+x0.x = [0 0];
+sol = solve(prob , x0);
+%4)
+[sol1,fval,exitflag,output] = solve(prob);
+xmin = sol1.x;
+%5)
+problem = prob2struct(prob);
+%6)
+problem.solver;
+%7)
+sol2 = lsqlin(problem);
+
+%1)
+%2)
+%3)
+f=@(x1,x2) (1-x1).^2 + 100.*(x2-x1.^2).^2;
+figure(2);
+fcontour(f,[-3 3 -3 3],'LevelList',exp(0:0.5:10)-1);
+
+
+figure(3);
+fcontour(f,[-2 2 -1 3],'LevelList',exp(0:0.5:10)-1);
+hold on;
+
+%trust-region
+options = optimoptions('fminunc', 'Algorithm', 'trust-region');
+options = optimoptions(options,'SpecifyObjectiveGradient', true);
+options = optimoptions(options,'OutputFcn', @optHistoryLogger);
+x0 = [-1,2];
+
+xopt = fminunc(@rosenbrock,x0,options);
+optHistory = optHistoryLogger; % get recorded data struct
+dist = optHistory.fval;
+xAlgo1 = optHistory.x;
+funcountAlgo1 = optHistory.functionCount;
+plot(optHistory.x(:,1),optHistory.x(:,2),'-o');
+
+
+%quasi-newton
+options2 = optimoptions('fminunc', 'Algorithm', 'quasi-newton');
+options2= optimoptions(options2,'SpecifyObjectiveGradient', true);
+options2 = optimoptions(options2,'OutputFcn', @optHistoryLogger);
+
+xopt2 = fminunc(@rosenbrock,x0,options2);
+optHistory2 = optHistoryLogger;
+dist2 = optHistory2.fval;
+Algo2 = optHistory2.x;
+funcountAlgo2 = optHistory2.functionCount;
+plot(optHistory2.x(:,1),optHistory2.x(:,2),'-x');
+
+
+%1
+options=optimoptions('fmincon','Algorithm','sqp');
+
+A=[1,2];
+b=1;
+Aeq=[1, -0.5];
+beq=0.7;
+x0=[0.5,0];
+lb=[];
+ub=[];
+nonlcon=[];
+
+xminc=fmincon(@rosenbrock,x0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%2
+Fig2=figure;
+f=@(x1,x2) (1-x1).^2 + 100.*(x2-x1.^2).^2;
+fcontour(f,[-3 3 -3 3],'LevelList',exp(0:0.5:10)-1);
+
+options = optimoptions(options,'SpecifyObjectiveGradient', true);
+options = optimoptions(options,'OutputFcn', @optHistoryLogger);
+x0 = [-1,2];
+
+xopt3 = fmincon(@rosenbrock,x0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+optHistory3 = optHistoryLogger; % get recorded data struct
+dist3 = optHistory3.fval;
+xAlgo3 = optHistory3.x;
+funcountAlgo3 = optHistory3.functionCount;
+hold on;
+plot(optHistory3.x(:,1),optHistory3.x(:,2),'-o');
+
+%4
+x1=[-3 3];
+plot(x1,-0.5*x1 + 0.5, 'c');
+
+x1=[-1 2];
+plot(x1, 2*x1-1.4,'m');
+
+function [f,g]=rosenbrock(x)
+  
+ f=100*(x(2)-(x(1)).^2).^2+(1-x(1)).^2;
+  if nargout > 1
+     g=[2*x(1) - 400*x(1)*(- x(1)^2 + x(2)) - 2;
+            - 200*x(1)^2 + 200*x(2)];
+ end
+ end
+%syms x1 x2;
+%f=100.*(x2-x1.^2).^2+(1-x1).^2;
+%gf=gradient(f);
