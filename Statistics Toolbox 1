@@ -1,0 +1,115 @@
+%1
+load('forearm.mat');
+%2
+mean(forearm);
+median(forearm);
+mode(forearm);
+%3
+std(forearm);
+max(forearm);
+min(forearm);
+quantile(forearm, [0.25 0.5 0.75]);
+%4
+histogram(forearm);
+%5
+histogram(forearm, ‘Normalization’, ‘probability’);
+%6
+uniform = rand(100, 1);
+normal = randn(100, 1);
+boxplot([uniform, normal], ‘labels’, {‘uniform’, ‘normal’});
+%7
+load('iris.mat');
+scatter(setosa(:,1), setosa(:,2));
+scatter(setosa(:,3), setosa(:,4));
+scatter(versicolor(:,1), versicolor(:,2));
+scatter(versicolor(:,3), versicolor(:,4));
+scatter(virginica(:,1), virginica(:,2));
+scatter(virginica(:,3), virginica(:,4));
+%8
+iris = [setosa; versicolor; virginica];
+group(1:50,:) = {'setosa'};
+group(51:100,:) = {'versicolor'};
+group(101:150,:) = {'virginica'};
+gscatter(iris(:,1),iris(:,2),group);
+%9 optional
+
+Probability Distributions
+PDF : probability density function
+CDF : cumulative distribution function
+%1
+n=25;
+p=0.2;
+pdf1 = binopdf(1:n,n,p);
+cdf1 = binocdf(1:n,n,p);
+ans1_1 = pdf1(3);
+ans1_2 = cdf1(3);
+[temp, ans1_3] = max(pdf1); 
+temp = find(cdf1>=0.9);
+ans1_4 = temp(1);
+temp = find(cdf1<=0.1);
+ans1_5 = temp(end);
+%2 optional
+%3
+mu = 12;
+pdf3 = exppdf(1:100,mu);
+cdf3 = expcdf(1:100,mu);
+ans3_1 = cdf3(7);
+ans3_2 = pdf3(6);
+ans3_3 = expinv(0.65,mu);
+%4 optional
+%5 optional
+%6
+mu = 130;
+sigma = 10;
+pdf6 = normpdf(85:150,mu,sigma);
+cdf6 = normcdf(85:150,mu,sigma);
+plot(85:150,pdf6);
+ans6_1 = 1-cdf6(100-84);
+ans6_2 = 0;
+ans6_3 = pdf6(95-84);
+ans6_4 = find(cdf6>=0.9,1)+ 84;
+%7
+mu = [1 -1];
+sigma1 = [1 0;0 1];
+sigma2 = [2 0;0 1];
+sigma3 = [0.5 0.3;0.3 0.5];
+%pdf71 = mvnpdf(,mu,sigma1);
+pdf71 = zeros(10,10);
+for i =1:10
+    for j=1:10
+    pdf71(i,j) = mvnpdf([i-5 j-5],mu,sigma1);
+    end
+end
+pdf72 = zeros(10,10);
+for i =1:10
+    for j=1:10
+    pdf72(i,j) = mvnpdf([i-5 j-5],mu,sigma2);
+    end
+end
+pdf73 = zeros(10,10);
+for i =1:10
+    for j=1:10
+    pdf73(i,j) = mvnpdf([i-5 j-5],mu,sigma3);
+    end
+end
+Sampling
+%8
+x1 = normrnd (0, 1, 1000, 1);
+boxplot([x1])
+histogram(x1);
+histfit(x1);
+%9
+x1 = normrnd (0, 1, 1000, 1);
+x2 = normrnd (3, 1, 1000, 1);
+histfit([x1; x2]);
+
+Non parametric distributions
+%10
+%kdensity 이용
+x = [normrnd(0, 1, 100, 1); normrnd(5, 1, 100, 1)];
+[f xi] = ksdensity(x);
+%normpdf 이용
+mu = 0;
+sigma = 1;
+x = rand(100, 1);
+y = normpdf(x, mu, sigma);
