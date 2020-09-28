@@ -1,0 +1,102 @@
+%1
+load('forearm.mat');
+dfittool(forearm);
+%2
+[muhat, sigmahat, muci, sigmaci] = normfit(forearm);
+%3
+pd = fitdist(forearm, 'Normal');
+%4
+gm = gmdistribution(muhat, sigmahat);
+y = pdf(gm, forearm);
+%5 
+[parmhat, parmci] = lognfit(forearm);
+figure(1)
+histogram(forearm,'Normalization','probability');
+x = 16:0.1:22;
+axis([16 22 0 0.4]);
+hold on
+plot(x,normpdf(x,muhat,sigmahat));
+plot(x,lognpdf(x,parmhat(1),parmhat(2)));
+hold off
+%6 
+pd1 = fitdist(forearm, 'Lognormal');
+pd2 = fitdist(forearm, 'Normal');
+x = 16:0.1:22;
+y1 = pdf(pd1, x);
+y2 = pdf(pd2, x);
+figure(2);
+histogram(forearm, 'Normalization','probability');
+plot(x, y1, 'y', x, y2, 'r');
+title('Normal Probability Density Function');
+xlabel('x');
+ylabel('pdf');
+%7 
+load('FitDist2.mat');
+pd1 = fitdist(FitDist2, 'Exponential');
+pd2 = fitdist(FitDist2, 'Weibull');
+x = 0:1:16;
+y1 = pdf(pd1, x);
+y2 = pdf(pd2, x);
+figure(3);
+plot(x, y1, 'r', x, y2, 'y');
+title('Exponential Probability Density Function');
+xlabel('x');
+ylabel('pdf');
+
+Regression
+%1
+load('carDataSet.mat');
+carTable = table(Acceleration, Cylinders, Displacement, Power, Year, Weight, Lper100km, ‘RowNames’, Model)
+%2
+figure(4);
+%corrplot(carTable, ‘Lper100km’);
+%3
+figRelReg = figure(5);
+scatter3(Acceleration, Weight, Lper100km);
+title('two most relevant regressors : Lper100km');
+%4
+figure(6);
+scatter3(Cylinders, Year, Lper100km);
+title('two least relevant regressors : Lper100km');
+%5
+hFig3 = figure(7);
+boxplot(Lper100km, Origin);
+
+Performance Criterial in Regression
+%6
+regressionLearner;
+%7
+%8
+%9
+v1 = Acceleration;
+v2 = Weight;
+RMSE = sqrt(mean((v1-v2).^2));
+%10
+v3 = Cylinders;
+v4 = Year;
+RMSE = sqrt(mean((v3-v4).^2));
+%11 
+%yfit = trainedModel.predictFcn(carTable);
+%save (yfit, 'mymodel.mat');
+%load('mymodel.mat');
+%12 ex
+[displacement, weight] = meshgrid(linspace(0,100,10),linspace(0,100,10));
+%13
+NumOfVar = 100;
+temp=zeros(NumOfVar,1);
+displacementnew=displacement(:);
+weightnew=weight(:);
+cylindersnew=temp;
+accelerationnew=temp;
+powernew=temp;
+yearnew=temp;
+testTable=table(accelerationnew,cylindersnew,displacementnew,powernew,yearnew,weightnew,'VariableNames',{'Acceleration','Cylinders','Displacement','Power','Year','Weight'},'RowNames',Model(1:NumOfVar));
+%14
+Lper100kmPRED = trainedModel.predictFcn(testTable);
+%15
+figure(8);
+Lper100kmPRED = reshape(Lper100kmPRED, 10, 10);
+mesh(displacement, weight,Lper100kmPRED);
+
+Gaussian Process Regression
+%16 optional
